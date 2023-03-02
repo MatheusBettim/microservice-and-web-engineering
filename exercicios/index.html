@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercicios</title>
+  </head>
+  <body>
+      Cep: <input type="text" id="cep" onblur="buscarCEP(this.value)" /><br />
+      Rua: <input type="text" id="logradouro" /><br />
+      Complemento: <input type="text" id="complemento" /><br />
+      localidade: <input type="text" id="localidade" /><br />
+      uf: <input type="text" id="uf" /><br />
+      ibge: <input type="text" id="ibge" /><br />
+      gia: <input type="text" id="gia" /><br />
+      ddd: <input type="text" id="ddd" /><br />
+      siafi: <input type="text" id="siafi" /><br />
+    <hr />
+    <input type="button" value="Buscar cliente" onclick="buscarCliente()" />
+    <table id="table">
+      <tr>
+        <td>Nome</td>
+        <td>endereço</td>
+        <td>telefone</td>
+      </tr>
+      <tr id="tabela"></tr>
+    </table>
+    <hr />
+    <input type="button" value="Buscar Veiculo" onclick="buscarVeiculo()" />
+    <select id="veiculo"></select>
+    <hr />
+    <input type="button" value="Buscar Materia" onclick="buscarMateria()" />
+
+    <table id="materia">
+    </table>
+  </body>
+
+  <script>
+    function buscarCliente() {
+      fetch("https://demo3266201.mockable.io/cliente")
+        .then((response) => response.json())
+        .then((data) => criarListaCliente(data))
+        .catch((error) => alert(error));
+    }
+    function criarListaCliente(data) {
+      for (let i = 0; i < data.length; i++) {
+        let cliente = `<tr> <td>${data[i].nome}</td>
+            <td>${data[i].endereço}</td>
+            <td>${data[i].telefone}</td>
+            </tr>`;
+        document.getElementById("table").innerHTML += cliente;
+      }
+    }
+    function buscarCEP(cep) {
+      const url = `https://viacep.com.br/ws/${cep}/json/`;
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => preencherCep(data))
+        .catch((error) => alert(error));
+    }
+
+    function preencherCep(data) {
+      document.getElementById("logradouro").value = data.logradouro;
+      document.getElementById("complemento").value = data.complemento;
+      document.getElementById("localidade").value = data.localidade;
+      document.getElementById("uf").value = data.uf;
+      document.getElementById("ibge").value = data.ibge;
+      document.getElementById("gia").value = data.gia;
+      document.getElementById("ddd").value = data.ddd;
+      document.getElementById("siafi").value = data.siafi;
+    }
+
+    function buscarVeiculo() {
+      fetch("https://demo3266201.mockable.io/veiculos")
+        .then((response) => response.json())
+        .then((data) => criarListaVeiculo(data))
+        .catch((error) => alert(error));
+    }
+    function criarListaVeiculo(data) {
+      for (let i = 0; i < data.length; i++) {
+        let item = `<option>${data[i]}</option>`;
+        document.getElementById("veiculo").innerHTML += item;
+      }
+    }
+
+    function buscarMateria() {
+      fetch("https://demo3266201.mockable.io/materias")
+        .then((response) => response.json())
+        .then((data) => criarListaMateria(data))
+        .catch((error) => alert(error));
+    }
+    function criarListaMateria(data) {
+      for (let i = 0; i < data.length; i++) {
+        let item = `<tr>
+            <td>Matéria : <td>
+            <td>${data[i]}</td></tr>`;
+        document.getElementById("materia").innerHTML += item;
+      }
+    }
+  </script>
+</html>
